@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  pg:
+    image: postgres
+    environment:
+      POSTGRES_USER: homemPeludoChorando
+      POSTGRES_PASSWORD: "n@oTem0sVagAs"
+      POSTGRES_DB: movie_club_dev
+    ports:
+      - "5445:5432"
