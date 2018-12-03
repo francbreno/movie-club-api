@@ -7,19 +7,19 @@ exports.notFound = (req, res, next) => {
 };
 
 exports.developmentErrors = (err, req, res, next) => {
-  err.stack = err.stack || '';
+  console.log(err);
   const errorDetails = {
-    message: err.message,
+    errors: err.errors || err.message,
     status: err.status,
-    stackHighlighted: err.stack.replace(/[a-z_-\d]+.js:\d+:\d+/gi, '<mark>$&</mark>'),
+    stack: err.stack || '',
   };
-  res.status(err.status || 500);
+  res.status(err.status);
   res.json(errorDetails);
 };
 
 exports.productionErrors = (err, req, res, next) => {
-  res.status(err.status || 500);
+  res.status(err.status);
   res.json({
-    message: err.message,
+    errors: err.errors || err.message,
   });
 };

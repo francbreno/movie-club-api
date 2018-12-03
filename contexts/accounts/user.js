@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const credentialCreator = require('./credential');
+const ValidationError = require('../../utils/ValidationError');
 
 let instance = null;
 
@@ -20,7 +21,7 @@ module.exports = (repoProvider) => {
   const validateForRegistration = (user) => {
     const { error } = schemaForRegistration.validate(user, { abortEarly: false });
     if (error) {
-      throw new Error(error.details.map(e => e.message));
+      throw new ValidationError(error.details.map(e => e.message));
     }
     return user;
   };
