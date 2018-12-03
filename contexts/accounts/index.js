@@ -9,20 +9,23 @@ module.exports = (repo) => {
   const pickAuthData = credential => R.pick(['email', 'password']);
   const isValidUserForGivenPassword = R.curry(Credential.isUserValid);
 
-  const allUsers = () => User.all();
+  const allUsers = () => User.getAll();
+  const findUserByEmail = email => User.findByEmail(email);
 
   const register = user => R.pipe(
     User.sanitize,
     User.validateForRegistration,
-    User.create,
+    User.register,
     R.then(Credential.create),
     R.then(pickAuthData),
     Credential.generateToken,
   )(user);
 
-  const findUserByEmail = email => User.findByEmail(email);
-
-  const validateToken = token => token;
+  const validateToken = token => R.pick(
+    Credential.verifyToken,
+    User.getById,
+    R.complement(R.not),
+  )(token);
 
   const loginWithEmailAndPassword = (email, password) => R.pipe(
     findUserByEmail,

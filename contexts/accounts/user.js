@@ -27,7 +27,7 @@ module.exports = (repoProvider) => {
 
   const sanitize = user => user;
 
-  const create = async (user) => {
+  const register = async (user) => {
     const { credential, ...userData } = user;
     const [id] = await repo.create(userData).returning('id');
     user.credential.user_id = id;
@@ -48,14 +48,12 @@ module.exports = (repoProvider) => {
     return user;
   };
 
-  const all = repo.getAll;
-
   instance = {
+    ...repo,
     validateForRegistration,
     sanitize,
-    create,
+    register,
     findByEmail,
-    all,
   };
 
   return instance;
