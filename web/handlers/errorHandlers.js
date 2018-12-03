@@ -7,18 +7,18 @@ exports.notFound = (req, res, next) => {
 };
 
 exports.developmentErrors = (err, req, res, next) => {
-  console.log(err);
+  console.log(err.stack);
   const errorDetails = {
+    type: err.name,
     errors: err.errors || err.message,
     status: err.status,
-    stack: err.stack || '',
   };
-  res.status(err.status);
+  res.status(err.status || 500);
   res.json(errorDetails);
 };
 
 exports.productionErrors = (err, req, res, next) => {
-  res.status(err.status);
+  res.status(err.status || 500);
   res.json({
     errors: err.errors || err.message,
   });
