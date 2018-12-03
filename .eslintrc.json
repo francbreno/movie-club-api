@@ -8,7 +8,7 @@
     "beforeEach": true,
     "beforeAll": true,
     "afterEach": true,
-    "afterAll": true,
+    "afterAll": true
   },
   "rules": {
     "comma-dangle": "warn",
