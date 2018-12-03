@@ -21,7 +21,7 @@ module.exports = (repoProvider) => {
   const validateForRegistration = (user) => {
     const { error } = schemaForRegistration.validate(user, { abortEarly: false });
     if (error) {
-      throw new ValidationError(error.details.map(e => e.message));
+      throw new ValidationError(error.details.map(e => e.message), 400);
     }
     return user;
   };
