@@ -22,7 +22,7 @@ module.exports = knex => tableName => ({
   // preload(table) {
   //   return knex(tableName).leftJoin(table, `${tableName}.id`, `${table}.id`)
   // },
-  query() {
+  table() {
     return knex(tableName);
   },
 });
