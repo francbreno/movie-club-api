@@ -26,7 +26,7 @@ module.exports = (repoProvider) => {
     return jwt.sign({}, 'secret', tokenConfig);
   };
 
-  const checkPassword = (password, hash) => bcrypt.compare(password, hash);
+  const checkPassword = (password, hash) => bcrypt.compareSync(password, hash);
 
   const isUserValid = (password, user) => {
     if (user && checkPassword(password, user.password_hash)) {
@@ -42,6 +42,11 @@ module.exports = (repoProvider) => {
     return { ...credential, password_hash };
   };
 
+  const verifyToken = (token) => {
+    const { userId } = jwt.verify(token, 'secret');
+    return userId;
+  };
+
   const create = (user) => {
     putPasswordHash(user.credential);
     const { email, password_hash, user_id } = user.credential;
@@ -49,11 +54,13 @@ module.exports = (repoProvider) => {
   };
 
   instance = {
+    ...repo,
     validate,
     putPasswordHash,
-    create,
+    verifyToken,
     generateToken,
     isUserValid,
+    create,
     schema,
   };
 
