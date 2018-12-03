@@ -20,12 +20,14 @@ module.exports = {
     debug: true,
   },
 
-  staging: {
+  test: {
     client: 'postgresql',
     connection: {
-      database: 'my_db',
-      user: 'username',
-      password: 'password',
+      host: '127.0.0.1',
+      port: 5446,
+      database: 'movie_club_test',
+      user: 'tester',
+      password: 'testing',
     },
     pool: {
       min: 2,
@@ -34,6 +36,10 @@ module.exports = {
     migrations: {
       tableName: 'knex_migrations',
     },
+    seeds: {
+      directory: './migrations/seeds/test',
+    },
+    debug: true,
   },
 
   production: {
