@@ -11,7 +11,7 @@ module.exports = (repoProvider) => {
   const Credential = credentialCreator(repoProvider);
 
   const schemaForRegistration = Joi.object().keys({
-    name: Joi.string().trim().alphanum().min(3)
+    name: Joi.string().trim().min(3)
       .required(),
     user_name: Joi.string().trim().alphanum().min(3)
       .required(),
