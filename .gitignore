@@ -4,3 +4,6 @@ node_modules
 launch.json
 *.env
 playground.js
+
+# ignoring coverage files
+coverage
