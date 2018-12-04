@@ -17,7 +17,7 @@ const users = [
   },
 ];
 
-const insertUser = (knex, user) => {
+const insertAccount = (knex, user) => {
   const { credential, ...userData } = user;
   return knex('users').insert(userData).first()
     .then(insertedUser => knex('credentials').insert({ ...credential, insertedUser_id: insertedUser.id }));
@@ -26,5 +26,5 @@ const insertUser = (knex, user) => {
 exports.seed = function seed(knex, Promise) {
   return knex('credentials').del()
     .then(knex('users'))
-    .then(() => Promise.all(users.map(insertUser)));
+    .then(() => Promise.all(users.map(insertAccount)));
 };
