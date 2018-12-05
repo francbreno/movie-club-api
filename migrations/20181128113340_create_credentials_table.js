@@ -4,7 +4,7 @@ exports.up = function (knex, Promise) {
     table.increments();
     table.string('email');
     table.string('password_hash');
-    table.timestamps();
+    table.timestamps(true, true);
 
     table.integer('user_id').references('id').inTable('users');
   });
