@@ -22,6 +22,27 @@ const userFixtures = {
 };
 
 describe('Given I\'m on /auth route', () => {
+  beforeEach(() => {
+    console.log('BEFORE EACH - RESTART DATABASE');
+    return db.migrate.rollback()
+      .then(db.migrate.latest)
+      .then(db.seed.run);
+  });
+
+  afterEach(() => db.migrate.rollback());
+
+  describe('when I do POST /auth and provide valid credentials', () => {
+    let response;
+    beforeEach(async () => {
+      response = await request(app)
+        .post('/auth')
+        .send(userFixtures.valid.credential);
+    });
+    test('then it must responde with status code 200 and return the user', () => {
+      expect(response.statusCode).toBe(200);
+    });
+  });
+
   describe('when I do GET /auth/me and i provide a valid token', () => {
     let response;
     beforeEach(async () => {

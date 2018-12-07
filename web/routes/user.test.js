@@ -21,50 +21,39 @@ const userFixtures = {
   },
 };
 
-describe('Given I\'m on /users route', () => {
+describe("Given I'm on /users route", () => {
+  beforeEach(() => {
+    console.log('BEFORE EACH - RESTART DATABASE');
+    return db.migrate.rollback()
+      .then(db.migrate.latest)
+      .then(db.seed.run);
+  });
+
+  afterEach(() => db.migrate.rollback());
+
   describe('when I do POST /users with valid data', () => {
     let response;
-    let count;
     beforeEach(async () => {
-      console.log('locals', app.locals);
-      count = (await db('users').select()).length;
       response = await request(app)
         .post('/users')
         .send(userFixtures.valid);
     });
-    test('then it must register a new user, log in and return status code 200', async () => {
-      const users = await db('users').select();
-      expect(users).toHaveLength(count + 1);
-      expect(response.body).toBeDefined();
+
+    test('then it must return status 200', () => {
       expect(response.statusCode).toBe(200);
     });
-  });
-
-  describe('when I do POST /users with invalid data', () => {
-    let response;
-    let count;
-    beforeEach(async () => {
-      count = (await db('users').select()).length;
-      response = await request(app)
-        .post('/users')
-        .send(userFixtures.invalid);
-    });
-    test('then it must respond with status code 400, not register a new user and return the errors', async () => {
-      const users = await db('users').select();
-      expect(response.statusCode).toBe(400);
-      expect(users).toHaveLength(count);
-      expect(response.body).toHaveProperty('errors');
+    test('and login', () => {
+      expect(response.body).toBeDefined();
     });
   });
 
   describe('when I do GET /users and there are some users registered', () => {
     let response;
-    let count;
     beforeEach(async () => {
-      count = (await db('users').select()).length;
       response = await request(app).get('/users');
     });
-    test('then it must return all registered users', () => expect(response.body.length).toBe(count));
+    test('then it must have status 200', () => expect(response.statusCode).toBe(200));
+    test('and return all registered users', () => expect(response.body).toHaveLength(2));
   });
 
   describe('when I do GET /users and there is no user registered', () => {
@@ -74,6 +63,7 @@ describe('Given I\'m on /users route', () => {
       await db('users').del();
       response = await request(app).get('/users');
     });
-    test('then it must return no users', () => expect(response.body.length).toBe(0));
+    test('then it must have status 200', () => expect(response.statusCode).toBe(200));
+    test('and return no users', () => expect(response.body.length).toBe(0));
   });
 });
