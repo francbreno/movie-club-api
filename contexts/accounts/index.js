@@ -33,6 +33,7 @@ module.exports = (repo) => {
     R.then(isUserValidForGivenPassword(password)),
     R.then(pickAuthData),
     Credential.generateToken,
+    Promise.resolve.bind(Promise),
   )(email);
 
   return {
