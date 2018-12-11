@@ -1,6 +1,6 @@
 const { catchErrors } = require('../handlers/errorHandlers');
 
-const _all = async (req, res) => {
+const _all = async (req, res, next) => {
   const { locals: { contexts } } = req.app;
   const users = await contexts.accounts.allUsers();
   return res.send(users).status(200);
@@ -8,11 +8,10 @@ const _all = async (req, res) => {
 
 exports.all = catchErrors(_all);
 
-const _newOne = async (req, res) => {
+const _newOne = async (req, res, next) => {
   const { locals: { contexts } } = req.app;
-  const user = await contexts.accounts.register(req.body);
-  console.log('User registered!!!!!!!');
-  return res.send(user).status(201);
+  const token = await contexts.accounts.register(req.body);
+  return res.send({ token }).status(201);
 };
 
 exports.newOne = catchErrors(_newOne);
