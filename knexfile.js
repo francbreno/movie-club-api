@@ -39,7 +39,7 @@ module.exports = {
     seeds: {
       directory: './migrations/seeds/test',
     },
-    debug: true,
+    debug: false,
   },
 
   production: {
