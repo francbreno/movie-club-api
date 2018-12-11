@@ -38,9 +38,8 @@ describe('Accounts Context', () => {
   describe('Given I want to register a new user', () => {
     describe('and the data is valid', () => {
       describe('when I register the user', () => {
-        let user;
         beforeEach(async () => {
-          user = await Accounts.register(userFixtures.valid);
+          await Accounts.register(userFixtures.valid);
         });
 
         test('It must be, in fact, registered', async () => {
@@ -60,7 +59,7 @@ describe('Accounts Context', () => {
     });
   });
 
-  describe('Given I want to login with valid credential', () => {
+  describe('Given I want to login', () => {
     describe('with a valid credential', () => {
       beforeEach(async () => {
         await Accounts.register(userFixtures.valid);
@@ -69,8 +68,7 @@ describe('Accounts Context', () => {
       describe('when try to login', () => {
         let user;
         beforeEach(async () => {
-          const { email, password } = userFixtures.valid.credential;
-          user = await Accounts.findByEmail(email, password);
+          user = await Accounts.findByEmail(...userFixtures.valid.credential);
         });
 
         test('It must return the token', () => {

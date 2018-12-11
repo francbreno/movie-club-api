@@ -43,7 +43,6 @@ describe('Accounts Context', () => {
         });
 
         test('it must be persisted', async () => {
-          console.log(userReturned);
           const user = await User.getById(userReturned.id);
           expect(user).toBeDefined();
         });
