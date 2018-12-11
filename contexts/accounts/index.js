@@ -22,10 +22,10 @@ module.exports = (repo) => {
     Promise.resolve.bind(Promise),
   );
 
-  const validateToken = token => R.pick(
+  const findUserByToken = token => R.pipe(
     Credential.verifyToken,
     User.getById,
-    R.complement(R.not),
+    Promise.resolve.bind(Promise),
   )(token);
 
   const loginWithEmailAndPassword = (email, password) => R.pipe(
@@ -36,10 +36,15 @@ module.exports = (repo) => {
     Promise.resolve.bind(Promise),
   )(email);
 
+  const getUserById = (id) => {
+    return User.getById(id);
+  };
+
   return {
     register,
-    validateToken,
+    findUserByToken,
     loginWithEmailAndPassword,
     allUsers,
+    getUserById,
   };
 };

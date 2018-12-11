@@ -17,7 +17,7 @@ module.exports = (repoProvider) => {
       .error(() => 'Password must contain at least one number, one lowercase and one uppercase letter and at least six characters that are letters, numbers or the underscore'),
   });
 
-  const hashPassword = password => bcrypt.hashSync(password, bcrypt.genSaltSync());
+  const hashPassword = password => bcrypt.hashSync(password, bcrypt.genSaltSync(12));
 
   const generateToken = (email, password) => {
     const tokenConfig = {
@@ -30,8 +30,10 @@ module.exports = (repoProvider) => {
 
   const isUserValid = (password, user) => {
     if (user && checkPassword(password, user.password_hash)) {
+      console.log('user is valid!');
       return user;
     }
+    console.log('data', password, user);
     throw new Error('Invalid email e/or password');
   };
 

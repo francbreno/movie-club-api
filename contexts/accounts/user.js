@@ -31,8 +31,14 @@ module.exports = (repoProvider) => {
   const register = async (user) => {
     const { credential, ...userData } = user;
     const [id] = await repo.create(userData).returning('id');
-    user.credential.user_id = id;
-    return user;
+    return id && ({
+      ...userData,
+      credential: {
+        ...credential,
+        user_id: id,
+      },
+      id,
+    });
   };
 
   const findByEmail = async (email) => {
@@ -42,10 +48,12 @@ module.exports = (repoProvider) => {
         'credentials',
         'users.id',
         'credentials.user_id',
-      ).select(
-        'users.id as id, users.name as name, users.user_name as user_name',
-        'credentials.email as email, credentials.password_hash as password_hash',
-      );
+      )
+      .select(
+        'users.id as id', 'users.name as name', 'users.user_name as user_name',
+        'credentials.email as email', 'credentials.password_hash as password_hash',
+      )
+      .first();
     return user;
   };
 

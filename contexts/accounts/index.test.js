@@ -1,6 +1,8 @@
 const db = require('../../config/db');
 const repo = require('../repo')(db);
 const Accounts = require('./index')(repo);
+const User = require('./user')(repo);
+const Credential = require('./credential')(repo);
 
 const userFixtures = {
   valid: {
@@ -23,14 +25,14 @@ const userFixtures = {
 
 
 describe('Accounts Context', () => {
-  beforeAll(() => {
-
+  beforeEach(async () => {
+    await db.migrate.rollback();
+    await db.migrate.latest();
+    await db.seed.run();
   });
-  beforeEach(() => {
 
-  });
-  afterEach(() => {
-
+  afterEach(async () => {
+    await db.migrate.rollback();
   });
   describe('Given I want to register a new user', () => {
     describe('and the data is valid', () => {
@@ -40,8 +42,9 @@ describe('Accounts Context', () => {
           user = await Accounts.register(userFixtures.valid);
         });
   
-        test('It must be, in fact, registered', () => {
-          expect(user).toBeTruthy();
+        test('It must be, in fact, registered', async () => {
+          const registeredUser = await User.findByEmail(userFixtures.valid.credential.email);
+          expect(registeredUser).toBeDefined();
         });
       });
     });
@@ -60,6 +63,5 @@ describe('Accounts Context', () => {
         });
       });
     });
-    
   });
 });
