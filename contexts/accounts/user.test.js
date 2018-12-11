@@ -97,6 +97,18 @@ describe('Accounts Context', () => {
         });
       });
     });
+    describe('with an invalid email', () => {
+      describe('when I ask for this user', () => {
+        let user;
+        beforeEach(async () => {
+          user = await User.findByEmail('ineXisten4Mail.com');
+        });
+
+        test('it must return no user', () => {
+          expect(user).toBeUndefined();
+        });
+      });
+    });
   });
 
   describe('Given I want to validate a user for registration', () => {
