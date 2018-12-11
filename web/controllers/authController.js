@@ -1,6 +1,6 @@
 const { catchErrors } = require('../handlers/errorHandlers');
 
-const _newOne = async (req, res) => {
+const _newOne = async (req, res, next) => {
   const { locals: { contexts } } = req.app;
   const { email, password } = req.body;
   const token = await contexts.accounts.loginWithEmailAndPassword(email, password);
@@ -8,3 +8,12 @@ const _newOne = async (req, res) => {
 };
 
 exports.newOne = catchErrors(_newOne);
+
+const _show = async (req, res, next) => {
+  const { locals: { contexts } } = req.app;
+  const token = req.get('Authorization');
+  const user = await contexts.accounts.findUserByToken(token);
+  res.send(user).status(200);
+};
+
+exports.show = catchErrors(_show);
