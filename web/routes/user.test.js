@@ -21,18 +21,18 @@ const userFixtures = {
   },
 };
 
-describe("Given I'm on /users route", () => {
-  beforeEach(() => {
-    console.log('BEFORE EACH - RESTART DATABASE');
-    return db.migrate.rollback()
-      .then(db.migrate.latest)
-      .then(db.seed.run);
+describe('/users route', () => {
+  let response;
+  beforeEach(async () => {
+    response = undefined;
+    await db.migrate.rollback();
+    await db.migrate.latest();
+    await db.seed.run();
   });
 
-  afterEach(() => db.migrate.rollback());
+  afterEach(async () => db.migrate.rollback());
 
   describe('when I do POST /users with valid data', () => {
-    let response;
     beforeEach(async () => {
       response = await request(app)
         .post('/users')
@@ -42,22 +42,38 @@ describe("Given I'm on /users route", () => {
     test('then it must return status 200', () => {
       expect(response.statusCode).toBe(200);
     });
-    test('and login', () => {
-      expect(response.body).toBeDefined();
+    test('and do the login', () => {
+      expect(response.body.token).toBeDefined();
+    });
+  });
+
+  describe('when I do POST /users with invalid data', () => {
+    beforeEach(async () => {
+      response = await request(app)
+        .post('/users')
+        .send(userFixtures.invalid);
+    });
+
+    test('then it must return status 400', () => {
+      expect(response.statusCode).toBe(400);
+    });
+    test('and return the error messages', () => {
+      expect(response.body.errors).toBeDefined();
+    });
+    test('and not do the login', () => {
+      expect(response.body.token).toBeUndefined();
     });
   });
 
   describe('when I do GET /users and there are some users registered', () => {
-    let response;
     beforeEach(async () => {
       response = await request(app).get('/users');
     });
-    test('then it must have status 200', () => expect(response.statusCode).toBe(200));
+    test('then it must return status 200', () => expect(response.statusCode).toBe(200));
     test('and return all registered users', () => expect(response.body).toHaveLength(2));
   });
 
   describe('when I do GET /users and there is no user registered', () => {
-    let response;
     beforeEach(async () => {
       await db('credentials').del();
       await db('users').del();
