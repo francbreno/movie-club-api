@@ -3,6 +3,7 @@ const repo = require('../repo')(db);
 const Accounts = require('./index')(repo);
 const User = require('./user')(repo);
 const Credential = require('./credential')(repo);
+const ValidationError = require('../../utils/ValidationError');
 
 const userFixtures = {
   valid: {
@@ -41,25 +42,39 @@ describe('Accounts Context', () => {
         beforeEach(async () => {
           user = await Accounts.register(userFixtures.valid);
         });
-  
+
         test('It must be, in fact, registered', async () => {
           const registeredUser = await User.findByEmail(userFixtures.valid.credential.email);
           expect(registeredUser).toBeDefined();
         });
       });
     });
-  
+
     describe('and the data is invalid', () => {
       describe('when I register the user', () => {
         test('It must return an error', () => {
-          try {
-            Accounts.register(userFixtures.invalid);
-          } catch (e) {
-            expect(e).toBeTruthy();
-          }
-          // expect.assertions(1);
-          // return Accounts.register(userFixtures.invalid)
-          //   .catch(e => expect(e).toBeTruthy());
+          expect(() => Accounts.register(userFixtures.invalid))
+            .toThrow(new ValidationError(['"user_name" is not allowed to be empty,"user_name" must only contain alpha-numeric characters,"user_name" length must be at least 3 characters long'], 400));
+        });
+      });
+    });
+  });
+
+  describe('Given I want to login with valid credential', () => {
+    describe('with a valid credential', () => {
+      beforeEach(async () => {
+        await Accounts.register(userFixtures.valid);
+      });
+
+      describe('when try to login', () => {
+        let user;
+        beforeEach(async () => {
+          const { email, password } = userFixtures.valid.credential;
+          user = await Accounts.findByEmail(email, password);
+        });
+
+        test('It must return the token', () => {
+          expect(user).toBeDefined();
         });
       });
     });
