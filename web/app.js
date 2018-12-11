@@ -19,6 +19,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(middlewares.injectContexts(contexts));
+app.use(middlewares.passport.initialize(contexts));
 
 app.use('/', routes);
 
