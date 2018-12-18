@@ -24,13 +24,9 @@ const userFixtures = {
 describe('/users route', () => {
   let response;
   beforeEach(async () => {
-    response = undefined;
-    await db.migrate.rollback();
-    await db.migrate.latest();
-    await db.seed.run();
+    await db('credentials').delete();
+    await db('users').delete();
   });
-
-  afterEach(async () => db.migrate.rollback());
 
   describe('when I do POST /users with valid data', () => {
     beforeEach(async () => {

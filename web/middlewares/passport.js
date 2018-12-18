@@ -11,14 +11,13 @@ const handlePayloadUser = done => (user) => {
 const createStrategy = (contexts, options) => new Strategy(
   options,
   (payload, done) => contexts.Accounts.getUserById(payload.id)
-    .then(console.log)
     .then((handlePayloadUser(done)).catch(err => done(err, null))),
 );
 
 module.exports = {
   initialize(contexts) {
     const strategyOptions = {
-      secretOrKey: 'replace for real key',
+      secretOrKey: process.env.SECRET_KEY,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     };
 

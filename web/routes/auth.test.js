@@ -24,16 +24,8 @@ const userFixtures = {
 describe('Given I\'m on /auth route', () => {
   let response;
   beforeEach(async () => {
-    console.log('clear before test');
-    response = undefined;
-    await db.migrate.rollback();
-    await db.migrate.latest();
-    await db.seed.run();
-  });
-
-  afterEach(async () => {
-    console.log('rollback after test');
-    await db.migrate.rollback();
+    await db('credentials').delete();
+    await db('users').delete();
   });
 
   describe('when I do POST /auth and provide valid credentials', () => {
