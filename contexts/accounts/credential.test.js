@@ -87,15 +87,15 @@ describe('Accounts Context - credential', () => {
   });
   describe('verifyToken', () => {
     describe('when token is valid', () => {
-      let id;
+      let payload;
       beforeEach(() => {
-        const token = jwt.sign({ id: 1 }, process.env.SECRET_KEY, { expiresIn: 30 * 24 * 60 * 60 * 1000 });
+        const token = jwt.sign({ id: 1 }, process.env.SECRET_KEY, { expiresIn: '1 week' });
         console.log(token);
-        id = Credential.verifyToken(token);
+        payload = Credential.verifyToken(token);
       });
 
-      it('must return the user\'s id', () => {
-        expect(id).toBe(1);
+      it('the payload must contain the user\'s id', () => {
+        expect(payload.id).toBe(1);
       });
     });
     describe('when token is invalid', () => {
@@ -117,7 +117,7 @@ describe('Accounts Context - credential', () => {
     });
   });
 
-  describe('checkUser', () => {
+  describe('check', () => {
     const password = 'p@radi5eL0st';
     const user = {
       name: 'John Milton',
@@ -131,7 +131,7 @@ describe('Accounts Context - credential', () => {
     describe('with correct password', () => {
       let userReturned;
       beforeEach(() => {
-        userReturned = Credential.checkUser(password, user);
+        userReturned = Credential.check(password, user);
       });
 
       it('must return the user', () => {
@@ -141,7 +141,7 @@ describe('Accounts Context - credential', () => {
 
     describe('with incorrect password', () => {
       it('must throw an error', () => {
-        const run = () => Credential.checkUser('wr0ng_Pas5word', user);
+        const run = () => Credential.check('wr0ng_Pas5word', user);
         expect(run).toThrow('Invalid email and/or password');
       });
     });

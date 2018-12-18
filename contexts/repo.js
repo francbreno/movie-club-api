@@ -4,7 +4,7 @@ module.exports = knex => tableName => ({
     return knex(tableName).insert(data);
   },
   getById(id) {
-    return knex(tableName).where({ id });
+    return knex(tableName).where({ id }).first();
   },
   getAll() {
     return knex(tableName);

@@ -51,16 +51,54 @@ describe('Accounts Context', () => {
     });
   });
 
-  describe('loginWithEmailAndPassword', () => {
-    describe('with a valid credential', () => {
-      let user;
+  describe('findUserByToken', () => {
+    let token;
+    let user;
+    beforeEach(async () => {
+      token = await Accounts.register(userFixtures.valid);
+    });
+
+    describe('with a valid token', () => {
       beforeEach(async () => {
-        const token = await Accounts.register(userFixtures.valid);
         user = await Accounts.findUserByToken(token);
       });
       test('It must return the user', () => {
+        // console.log('user found, its defined', user);
         expect(user).toBeDefined();
       });
+      test('with the right name', () => {
+        expect(user.name).toBe(userFixtures.valid.name);
+      });
+    });
+  });
+
+  describe('loginWithEmailAndPassword', () => {
+    beforeEach(async () => {
+      await Accounts.register(userFixtures.valid);
+    });
+
+    describe('with valid email and password', () => {
+      test('It must return a token', async () => {
+        const { email, password } = userFixtures.valid.credential;
+        const token = await Accounts.loginWithEmailAndPassword(email, password);
+        expect(token).toBeDefined();
+      });
+    });
+
+    describe('with an inexistent email', () => {
+      const inexistentEmail = 'inexistent@mail.com';
+      test('It must thrown an error', () => Accounts.loginWithEmailAndPassword(
+        inexistentEmail,
+        userFixtures.valid.credential.password,
+      ).catch(e => expect(e.message).toBe(`User not found with email ${inexistentEmail}`)));
+    });
+
+    describe('with the wrong password', () => {
+      const wrongPassword = 'Wr0ngPas5word';
+      test('It must thrown an error', () => Accounts.loginWithEmailAndPassword(
+        userFixtures.valid.credential.email,
+        wrongPassword,
+      ).catch(e => expect(e.message).toBe('Invalid email and/or password')));
     });
   });
 });

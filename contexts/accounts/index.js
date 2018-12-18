@@ -6,11 +6,11 @@ module.exports = (repo) => {
   const Credential = credentialCreator(repo);
   const User = userCreator(repo);
 
-  const pickAuthData = credential => R.pick(['id']);
-  const checkUserPassword = R.curry(Credential.checkUser);
-
+  const pickAuthData = R.pick(['user_id']);
+  const checkUserPassword = R.curry(Credential.check);
   const allUsers = () => User.getAll();
-  const findUserByEmail = email => User.findByEmail(email);
+  const findUserByEmail = User.findByEmail;
+  const getUserById = User.getById;
 
   const register = R.pipe(
     User.sanitize,
@@ -18,27 +18,22 @@ module.exports = (repo) => {
     User.register,
     R.then(Credential.create),
     R.then(pickAuthData),
-    Credential.generateToken,
-    Promise.resolve.bind(Promise),
+    R.then(Credential.generateToken),
   );
 
-  const findUserByToken = token => R.pipe(
+  const findUserByToken = R.pipe(
     Credential.verifyToken,
-    User.getById,
-    Promise.resolve.bind(Promise),
-  )(token);
+    pickAuthData,
+    R.prop('user_id'),
+    getUserById,
+  );
 
   const loginWithEmailAndPassword = (email, password) => R.pipe(
     findUserByEmail,
     R.then(checkUserPassword(password)),
     R.then(pickAuthData),
-    Credential.generateToken,
-    Promise.resolve.bind(Promise),
+    R.then(Credential.generateToken),
   )(email);
-
-  const getUserById = (id) => {
-    return User.getById(id);
-  };
 
   return {
     register,

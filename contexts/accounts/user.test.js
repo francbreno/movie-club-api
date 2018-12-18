@@ -59,10 +59,10 @@ describe('Accounts Context - User', () => {
     let user;
     beforeEach(async () => {
       const createdUser = await User.register(userFixtures.valid);
-      await Credential.create({ 
-        ...userFixtures.valid,
-        credential: { ...userFixtures.valid.credential, user_id: createdUser.id } 
-      });
+      const credential = await Credential.create(
+        { ...userFixtures.valid.credential, user_id: createdUser.id },
+      );
+      console.log(createdUser, credential);
     });
 
     describe('with a valid email from an existing user', () => {
@@ -70,10 +70,10 @@ describe('Accounts Context - User', () => {
         user = await User.findByEmail(userFixtures.valid.credential.email);
       });
 
-      test('it must be returned', async () => {
+      test('it must be returned', () => {
         expect(user).toBeDefined();
       });
-      test('and must have the same email', async () => {
+      test('and must have the same email', () => {
         expect(user.email).toBe(userFixtures.valid.credential.email);
       });
     });
@@ -83,7 +83,7 @@ describe('Accounts Context - User', () => {
         user = await User.findByEmail('inexistent@mail.com');
       });
 
-      test('it must return no user', async () => {
+      test('it must return no user', () => {
         expect(user).toBeUndefined();
       });
     });
@@ -113,7 +113,7 @@ describe('Accounts Context - User', () => {
         user = await User.validateForRegistration(userFixtures.valid);
       });
 
-      test('it must return the user', async () => {
+      test('it must return the user', () => {
         expect(user).toEqual(userFixtures.valid);
       });
     });

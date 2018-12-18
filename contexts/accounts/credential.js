@@ -2,8 +2,6 @@ const Joi = require('joi');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const TOKEN_EXPIRATION_TIME = 30 * 24 * 60 * 60 * 1000;
-
 let instance = null;
 
 module.exports = (repoProvider) => {
@@ -21,19 +19,19 @@ module.exports = (repoProvider) => {
 
   const generateToken = (payload) => {
     const tokenConfig = {
-      expiresIn: TOKEN_EXPIRATION_TIME,
+      expiresIn: '1 week',
     };
     return jwt.sign(payload, process.env.SECRET_KEY, tokenConfig);
   };
 
+  const verifyToken = token => jwt.verify(token, process.env.SECRET_KEY);
+
   const checkPassword = (password, hash) => bcrypt.compareSync(password, hash);
 
-  const checkUser = (password, user) => {
+  const check = (password, user) => {
     if (user && checkPassword(password, user.credential.password_hash)) {
-      console.log('user is valid!');
       return user;
     }
-    console.log('data', password, user);
     throw new Error('Invalid email and/or password');
   };
 
@@ -44,15 +42,13 @@ module.exports = (repoProvider) => {
     return { ...credential, password_hash };
   };
 
-  const verifyToken = (token) => {
-    const { id } = jwt.verify(token, process.env.SECRET_KEY);
-    return id;
-  };
-
-  const create = (user) => {
-    putPasswordHash(user.credential);
-    const { email, password_hash, user_id } = user.credential;
-    return repo.create({ email, password_hash, user_id });
+  const create = async (user) => {
+    const { email, password_hash } = putPasswordHash(user.credential);
+    const [credential] = await repo.create({ email, password_hash, user_id: user.id }).returning('*');
+    if (!credential) {
+      throw new Error(`Error creating credential for user ${credential.user_id}`);
+    }
+    return credential;
   };
 
   instance = {
@@ -61,7 +57,7 @@ module.exports = (repoProvider) => {
     putPasswordHash,
     verifyToken,
     generateToken,
-    checkUser,
+    check,
     create,
     schema,
   };

@@ -30,14 +30,16 @@ module.exports = (repoProvider) => {
 
   const register = async (user) => {
     const { credential, ...userData } = user;
-    const [id] = await repo.create(userData).returning('id');
-    return id && ({
-      ...userData,
+    const [createdUser] = await repo.create(userData).returning('*');
+    if (!createdUser) {
+      throw new Error('Error creating new user');
+    }
+    return ({
+      ...createdUser,
       credential: {
         ...credential,
-        user_id: id,
+        user_id: createdUser.id,
       },
-      id,
     });
   };
 
@@ -54,7 +56,20 @@ module.exports = (repoProvider) => {
         'credentials.email as email', 'credentials.password_hash as password_hash',
       )
       .first();
-    return user;
+    if (!user) {
+      throw new Error(`User not found with email ${email}`);
+    }
+
+    return {
+      id: user.id,
+      name: user.name,
+      user_name: user.user_name,
+      credential: {
+        email: user.email,
+        password_hash: user.password_hash,
+        user_id: user.id,
+      }
+    };
   };
 
   instance = {
