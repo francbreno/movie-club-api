@@ -6,8 +6,8 @@ module.exports = (repo) => {
   const Credential = credentialCreator(repo);
   const User = userCreator(repo);
 
-  const pickAuthData = credential => R.pick(['email', 'password']);
-  const isUserValidForGivenPassword = R.curry(Credential.isUserValid);
+  const pickAuthData = credential => R.pick(['id']);
+  const checkUserPassword = R.curry(Credential.checkUser);
 
   const allUsers = () => User.getAll();
   const findUserByEmail = email => User.findByEmail(email);
@@ -30,7 +30,7 @@ module.exports = (repo) => {
 
   const loginWithEmailAndPassword = (email, password) => R.pipe(
     findUserByEmail,
-    R.then(isUserValidForGivenPassword(password)),
+    R.then(checkUserPassword(password)),
     R.then(pickAuthData),
     Credential.generateToken,
     Promise.resolve.bind(Promise),

@@ -1,10 +1,35 @@
+const bcrypt = require('bcryptjs');
 
-exports.seed = function (knex, Promise) {
-  // Deletes ALL existing entries
-  return knex('users').del()
-    .then(() => knex('users').insert([
-      { id: 1, name: 'Francisco Breno Barbosa Soares', user_name: 'francbreno' },
-      { id: 2, name: 'Joaquim Pinheiro Barbosa Soares', user_name: 'quimquim' },
-      { id: 3, name: 'Débora Pinheiro Rodrigues', user_name: 'fonilda' },
-    ]));
+const users = [
+  {
+    name: 'John Milton',
+    user_name: 'johnmilton',
+    credential: {
+      email: 'milton.john@gmail.com',
+      password_hash: bcrypt.hashSync('p@radi5eL0st', bcrypt.genSaltSync(12)),
+    },
+  },
+  {
+    name: 'Bernard Cornwell',
+    user_name: 'littlebernard',
+    credential: {
+      email: 'cornwell@writters.com',
+      password_hash: bcrypt.hashSync('arthur4Ever', bcrypt.genSaltSync(12)),
+    },
+  },
+];
+
+exports.seed = function seed(knex, Promise) {
+  const insertAccount = (user) => {
+    const { credential, ...userData } = user;
+    return knex('users').insert(userData).returning('id')
+      .then(([id]) => knex('credentials').insert({
+        ...credential,
+        user_id: id,
+      }));
+  };
+
+  return knex('credentials').del()
+    .then(knex('users').del())
+    .then(() => Promise.all(users.map(insertAccount)));
 };

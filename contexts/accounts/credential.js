@@ -19,22 +19,22 @@ module.exports = (repoProvider) => {
 
   const hashPassword = password => bcrypt.hashSync(password, bcrypt.genSaltSync(12));
 
-  const generateToken = (email, password) => {
+  const generateToken = (payload) => {
     const tokenConfig = {
       expiresIn: TOKEN_EXPIRATION_TIME,
     };
-    return jwt.sign({}, 'secret', tokenConfig);
+    return jwt.sign(payload, process.env.SECRET_KEY, tokenConfig);
   };
 
   const checkPassword = (password, hash) => bcrypt.compareSync(password, hash);
 
-  const isUserValid = (password, user) => {
-    if (user && checkPassword(password, user.password_hash)) {
+  const checkUser = (password, user) => {
+    if (user && checkPassword(password, user.credential.password_hash)) {
       console.log('user is valid!');
       return user;
     }
     console.log('data', password, user);
-    throw new Error('Invalid email e/or password');
+    throw new Error('Invalid email and/or password');
   };
 
   const validate = credential => schema.validate(credential, { abortEarly: false });
@@ -45,8 +45,8 @@ module.exports = (repoProvider) => {
   };
 
   const verifyToken = (token) => {
-    const { userId } = jwt.verify(token, 'secret');
-    return userId;
+    const { id } = jwt.verify(token, process.env.SECRET_KEY);
+    return id;
   };
 
   const create = (user) => {
@@ -61,7 +61,7 @@ module.exports = (repoProvider) => {
     putPasswordHash,
     verifyToken,
     generateToken,
-    isUserValid,
+    checkUser,
     create,
     schema,
   };

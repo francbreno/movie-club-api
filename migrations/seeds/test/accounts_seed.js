@@ -6,7 +6,7 @@ const users = [
     user_name: 'johnmilton',
     credential: {
       email: 'milton.john@gmail.com',
-      password_hash: bcrypt.hashSync('p@radi5eL0st', bcrypt.genSaltSync()),
+      password_hash: bcrypt.hashSync('p@radi5eL0st', bcrypt.genSaltSync(12)),
     },
   },
   {
@@ -14,7 +14,7 @@ const users = [
     user_name: 'littlebernard',
     credential: {
       email: 'cornwell@writters.com',
-      password_hash: bcrypt.hashSync('arthur4Ever', bcrypt.genSaltSync()),
+      password_hash: bcrypt.hashSync('arthur4Ever', bcrypt.genSaltSync(12)),
     },
   },
 ];
