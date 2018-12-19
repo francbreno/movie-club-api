@@ -59,10 +59,10 @@ describe('Accounts Context - User', () => {
     let user;
     beforeEach(async () => {
       const createdUser = await User.register(userFixtures.valid);
-      const credential = await Credential.create(
-        { ...userFixtures.valid.credential, user_id: createdUser.id },
-      );
-      console.log(createdUser, credential);
+      await Credential.create({
+        ...createdUser,
+        credential: { ...createdUser.credential, user_id: createdUser.id },
+      });
     });
 
     describe('with a valid email from an existing user', () => {
@@ -74,27 +74,23 @@ describe('Accounts Context - User', () => {
         expect(user).toBeDefined();
       });
       test('and must have the same email', () => {
-        expect(user.email).toBe(userFixtures.valid.credential.email);
+        expect(user.credential.email).toBe(userFixtures.valid.credential.email);
       });
     });
 
     describe('with a valid email from an inexistent user', () => {
-      beforeEach(async () => {
-        user = await User.findByEmail('inexistent@mail.com');
-      });
-
-      test('it must return no user', () => {
-        expect(user).toBeUndefined();
+      test('it must thrown an error', () => {
+        const email = 'inexistent@mail.com';
+        return User.findByEmail(email)
+          .catch(e => expect(e.message).toBe(`User not found with email ${email}`));
       });
     });
 
     describe('with an invalid email', () => {
-      beforeEach(async () => {
-        user = await User.findByEmail('ineXisten4Mail.com');
-      });
-
-      test('it must return no user', () => {
-        expect(user).toBeUndefined();
+      test('it must thrown an error', () => {
+        const email = 'ineXisten4Mail.com';
+        return User.findByEmail(email)
+          .catch(e => expect(e.message).toBe(`User not found with email ${email}`));
       });
     });
   });
