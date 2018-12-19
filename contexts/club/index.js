@@ -1,28 +1,28 @@
 module.exports = (repo) => {
-  const indicationRepo = repo('./indication');
+  const roundRepo = repo('./round');
   const movieRepo = repo('./movie');
 
-  const allIndications = () => {
+  const allRounds = () => {
 
   };
 
-  const newIndication = (movie, user) => {
+  const newRound = (movie, user) => {
 
   };
 
-  const currentIndication = () => {
+  const currentRound = () => {
 
   };
 
-  const rateIndication = (movie, user, rating) => {
+  const rateRound = (movie, user, rating) => {
 
   };
 
-  const watchIndication = (indication, user) => {
+  const watchRound = (indication, user) => {
 
   };
 
-  const debitsFromIndication = (indication) => {
+  const debitsFromRound = (indication) => {
 
   };
 
@@ -36,12 +36,12 @@ module.exports = (repo) => {
 
 
   return {
-    allIndications,
-    newIndication,
-    rateIndication,
-    watchIndication,
-    debitsFromIndication,
+    allRounds,
+    newRound,
+    rateRound,
+    watchRound,
+    debitsFromRound,
     payDebit,
-    currentIndication,
+    currentRound,
   };
 };
