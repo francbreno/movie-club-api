@@ -10,8 +10,8 @@ const handlePayloadUser = done => (user) => {
 
 const createStrategy = (contexts, options) => new Strategy(
   options,
-  (payload, done) => contexts.Accounts.getUserById(payload.id)
-    .then((handlePayloadUser(done)).catch(err => done(err, null))),
+  (payload, done) => contexts.accounts.getUserById(payload.id)
+    .then(handlePayloadUser(done)).catch(err => done(err, null)),
 );
 
 module.exports = {

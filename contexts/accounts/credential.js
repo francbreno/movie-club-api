@@ -48,7 +48,7 @@ module.exports = (repoProvider) => {
     if (!credential) {
       throw new Error(`Error creating credential for user ${credential.user_id}`);
     }
-    return credential;
+    return user;
   };
 
   instance = {

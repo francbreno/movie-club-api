@@ -49,13 +49,15 @@ module.exports = {
   // forceCoverageMatch: [],
 
   // A path to a module which exports an async function that is triggered once before all test suites
-  globalSetup: './support/tests/jestGlobalSetup.js',
+  globalSetup: '<rootDir>/support/tests/jestGlobalSetup.js',
 
   // A path to a module which exports an async function that is triggered once after all test suites
-  globalTeardown: './support/tests/jestGlobalTeardown.js',
+  globalTeardown: '<rootDir>/support/tests/jestGlobalTeardown.js',
 
   // A set of global variables that need to be available in all test environments
-  // globals: {},
+  globals: {
+    __AUTHORIZATION_TOKEN__: 'abcdefgh',
+  },
 
   // An array of directory names to be searched recursively up from the requiring module's location
   // moduleDirectories: [
@@ -115,10 +117,10 @@ module.exports = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  setupFiles: ['./support/tests/prepareEnv.js'],
+  setupFiles: ['<rootDir>/support/tests/prepareEnv.js', '<rootDir>/support/tests/setupTesting.js'],
 
   // The path to a module that runs some code to configure or set up the testing framework before each test
-  // setupTestFrameworkScriptFile: null,
+  // setupTestFrameworkScriptFile: '',
 
   // A list of paths to snapshot serializer modules Jest should use for snapshot testing
   // snapshotSerializers: [],

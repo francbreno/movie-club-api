@@ -2,21 +2,58 @@ const request = require('supertest');
 const app = require('../app');
 const db = require('../../config/db');
 
-describe('/movies route', () => {
+describe('/users', () => {
+  let token;
   let response;
   beforeEach(async () => {
     await db('credentials').delete();
     await db('users').delete();
+    await db.seed.run();
+
+    const authResponse = await request(app)
+      .post('/auth')
+      .send({ email: 'milton.john@gmail.com', password: 'p@radi5eL0st' });
+    // eslint-disable-next-line prefer-destructuring
+    token = authResponse.body.token;
   });
 
-  describe('when I do GET /users', () => {
-    beforeEach(async () => {
-      response = await request(app)
-        .get('/movies');
+  describe('Feature: search movies', () => {
+    describe('Scenario: Not logged in', () => {
+      describe('When I GET /movies', () => {
+        beforeEach(async () => {
+          response = await request(app)
+            .get('/movies');
+        });
+
+        test('then it must return status "Unauthorized"', () => {
+          expect(response.statusCode).toBe(401);
+        });
+        test('with no content', () => {
+          expect(response.body).toEqual({});
+        });
+      });
     });
 
-    test('it must return status 200', () => {
-      expect(response.statusCode).toBe(200);
+    describe('Scenario: Logged in', () => {
+      describe('Given that I\'m logged in', () => {
+        describe('When I GET /movies with the term "matrix"', () => {
+          beforeEach(async () => {
+            response = await request(app)
+              .get('/movies?title=matrix')
+              .set('Authorization', `Bearer ${token}`);
+          });
+
+          test('then it must return status 200', () => {
+            expect(response.statusCode).toBe(200);
+          });
+          test('and the list of movies', () => {
+            expect(response.body).toHaveLength(2);
+          });
+          test('and return no errors', () => {
+            expect(response.body.errors).toBeUndefined();
+          });
+        });
+      });
     });
   });
 });

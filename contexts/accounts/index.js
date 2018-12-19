@@ -6,7 +6,8 @@ module.exports = (repo) => {
   const Credential = credentialCreator(repo);
   const User = userCreator(repo);
 
-  const pickAuthData = R.pick(['user_id']);
+  const pickAuthPayload = R.pick(['id']);
+  const extractUserId = R.prop('id');
   const checkUserPassword = R.curry(Credential.check);
   const allUsers = () => User.getAll();
   const findUserByEmail = User.findByEmail;
@@ -17,26 +18,26 @@ module.exports = (repo) => {
     User.validateForRegistration,
     User.register,
     R.then(Credential.create),
-    R.then(pickAuthData),
+    R.then(pickAuthPayload),
     R.then(Credential.generateToken),
   );
 
   const findUserByToken = R.pipe(
     Credential.verifyToken,
-    pickAuthData,
-    R.prop('user_id'),
+    extractUserId,
     getUserById,
   );
 
   const loginWithEmailAndPassword = (email, password) => R.pipe(
     findUserByEmail,
     R.then(checkUserPassword(password)),
-    R.then(pickAuthData),
+    R.then(pickAuthPayload),
     R.then(Credential.generateToken),
   )(email);
 
   return {
     register,
+    findUserByEmail,
     findUserByToken,
     loginWithEmailAndPassword,
     allUsers,
