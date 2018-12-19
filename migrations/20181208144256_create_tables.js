@@ -12,6 +12,19 @@ exports.up = function up(knex, Promise) {
     table.timestamps(true, true);
 
     table.integer('user_id').references('id').inTable('users');
+  })).then(() => knex.schema.createTable('movies', (table) => {
+    table.string('title').unique().notNullable();
+    table.increments();
+    table.timestamps(true, true);
+
+    table.integer('user_id').references('id').inTable('users');
+    table.integer('movie_id').references('id').inTable('movies');
+  })).then(() => knex.schema.createTable('rounds', (table) => {
+    table.increments();
+    table.timestamps(true, true);
+
+    table.integer('user_id').references('id').inTable('users');
+    table.integer('movie_id').references('id').inTable('movies');
   }));
 };
 

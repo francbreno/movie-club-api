@@ -30,7 +30,7 @@ module.exports = (repoProvider) => {
 
   const register = async (user) => {
     const { credential, ...userData } = user;
-    const [createdUser] = await repo.create(userData).returning('*');
+    const [createdUser] = await repo.create(userData);
     if (!createdUser) {
       throw new Error('Error creating new user');
     }

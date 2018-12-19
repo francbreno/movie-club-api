@@ -1,47 +1,12 @@
+const R = require('ramda');
+const roundCreator = require('./round');
+
 module.exports = (repo) => {
-  const roundRepo = repo('./round');
-  const movieRepo = repo('./movie');
+  const Round = roundCreator(repo);
 
-  const allRounds = () => {
-
-  };
-
-  const newRound = (movie, user) => {
-
-  };
-
-  const currentRound = () => {
-
-  };
-
-  const rateRound = (movie, user, rating) => {
-
-  };
-
-  const watchRound = (indication, user) => {
-
-  };
-
-  const debitsFromRound = (indication) => {
-
-  };
-
-  const payDebit = (debit, user) => {
-
-  };
-
-  const allDebits = () => {
-
-  };
-
+  const allRounds = Round.getAll;
 
   return {
     allRounds,
-    newRound,
-    rateRound,
-    watchRound,
-    debitsFromRound,
-    payDebit,
-    currentRound,
   };
 };

@@ -1,9 +1,6 @@
-const { catchErrors } = require('../handlers/errorHandlers');
+const router = require('express').Router();
+const roundController = require('../controllers/roundController');
 
-const _all = async (req, res, next) => {
-  const { locals: { contexts } } = req.app;
-  const rounds = await contexts.club.allRounds();
-  return res.send(rounds).status(200);
-};
+router.get('/', roundController.all);
 
-exports.all = catchErrors(_all);
+module.exports = router;
