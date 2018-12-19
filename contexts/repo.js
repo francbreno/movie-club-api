@@ -1,7 +1,7 @@
 // Uses knex to create a Repository for data access
 module.exports = knex => tableName => ({
   create(data) {
-    return knex(tableName).insert(data);
+    return knex(tableName).insert(data).returning('*');
   },
   getById(id) {
     return knex(tableName).where({ id }).first();
