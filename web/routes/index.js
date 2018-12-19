@@ -4,7 +4,7 @@ const usersRoutes = require('./users');
 const authRoutes = require('./auth');
 const registerRoutes = require('./register');
 const debitsRoutes = require('./debits');
-const indicationsRoutes = require('./indications');
+const roundsRoutes = require('./rounds');
 const moviesRoutes = require('./movies');
 
 const router = express.Router();
@@ -15,7 +15,7 @@ router.use('/register', registerRoutes);
 router.use(authenticate());
 
 router.use('/users', usersRoutes);
-router.use('/indications', indicationsRoutes);
+router.use('/rounds', roundsRoutes);
 router.use('/movies', moviesRoutes);
 router.use('/debits', debitsRoutes);
 

@@ -1,17 +1,9 @@
-const express = require('express');
+const { catchErrors } = require('../handlers/errorHandlers');
 
-const router = express.Router();
-const roundController = require('../controllers/roundController');
-const ratingController = require('../controllers/ratingController');
-const watcherController = require('../controllers/watcherController');
+const _all = async (req, res, next) => {
+  const { locals: { contexts } } = req.app;
+  const rounds = await contexts.club.allRounds();
+  return res.send(rounds).status(200);
+};
 
-router.get('/', roundController.all);
-router.get('/current', roundController.show);
-
-router.post('/', roundController.newOne);
-router.post('/:id/watchers', watcherController.all);
-router.post('/:id/ratings', ratingController.newOne);
-
-router.delete('/:id', roundController.del);
-
-module.exports = router;
+exports.all = catchErrors(_all);
