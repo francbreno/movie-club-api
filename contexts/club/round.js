@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const R = require('ramda');
 const ValidationError = require('../../utils/ValidationError');
 
 let instance = null;
@@ -31,11 +32,22 @@ module.exports = (repoProvider) => {
     return createdRound;
   };
 
+  const mapToRound = resultSet => ({});
+
+  const getCurrent = async () => {
+    R.pipe(
+      repo.max('id'),
+      R.then(mapToRound),
+      
+    )();
+  };
+
   instance = {
     ...repo,
     sanitize,
     create,
     validate,
+    getCurrent,
   };
 
   return instance;

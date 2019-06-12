@@ -15,14 +15,7 @@ module.exports = knex => tableName => ({
   delete(id) {
     return knex(tableName).where({ id }).delete();
   },
-  find(filter) {
+  search(filter) {
     return knex(tableName).where(filter);
-  },
-  // TODO
-  // preload(table) {
-  //   return knex(tableName).leftJoin(table, `${tableName}.id`, `${table}.id`)
-  // },
-  table() {
-    return knex(tableName);
   },
 });

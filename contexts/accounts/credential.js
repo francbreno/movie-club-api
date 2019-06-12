@@ -1,6 +1,5 @@
 const Joi = require('joi');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 let instance = null;
 
@@ -16,15 +15,6 @@ module.exports = (repoProvider) => {
   });
 
   const hashPassword = password => bcrypt.hashSync(password, bcrypt.genSaltSync(12));
-
-  const generateToken = (payload) => {
-    const tokenConfig = {
-      expiresIn: '1 week',
-    };
-    return jwt.sign(payload, process.env.SECRET_KEY, tokenConfig);
-  };
-
-  const verifyToken = token => jwt.verify(token, process.env.SECRET_KEY);
 
   const checkPassword = (password, hash) => bcrypt.compareSync(password, hash);
 
@@ -55,8 +45,6 @@ module.exports = (repoProvider) => {
     ...repo,
     validate,
     putPasswordHash,
-    verifyToken,
-    generateToken,
     check,
     create,
     schema,
