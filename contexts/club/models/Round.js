@@ -1,6 +1,6 @@
-const { Model } = require('objection');
+const BaseModel = require('./baseModel');
 
-class Round extends Model {
+class Round extends BaseModel {
   static get tableName() {
     return 'rounds';
   }
@@ -8,7 +8,7 @@ class Round extends Model {
   static get relationMappings() {
     return {
       movie: {
-        relation: Model.HasOneRelation,
+        relation: BaseModel.HasOneRelation,
         modelClass: 'Movie',
         join: {
           from: 'rounds.id',
@@ -16,23 +16,25 @@ class Round extends Model {
         },
       },
       indicatedBy: {
-        relation: Model.BelongsToOneRelation,
+        relation: BaseModel.BelongsToOneRelation,
         modelClass: 'Member',
         join: {
           from: 'rounds.memberId',
-          to: 'members.id',
+          to: 'members.userId',
         },
       },
       watchedBy: {
-        relation: Model.ManyToManyRelation,
+        relation: BaseModel.ManyToManyRelation,
         modelClass: 'Member',
-        from: 'rounds.id',
-        through: {
-          from: 'rounds_members.roundId',
-          to: 'rounds_members.memberId',
+        join: {
+          from: 'rounds.id',
+          through: {
+            from: 'rounds_members.roundId',
+            to: 'rounds_members.memberId',
+          },
+          to: 'members.userId',
         },
-        to: 'members.id',
-      }
+      },
     };
   }
 }
