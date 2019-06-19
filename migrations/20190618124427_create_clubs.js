@@ -5,7 +5,7 @@ exports.up = function(knex, Promise) {
     table.string('name');
     table.integer('userId').unsigned().notNullable();
 
-    table.foreign('userId').references('userId').inTable('users');
+    table.foreign('userId').references('id').inTable('users');
   });
 };
 

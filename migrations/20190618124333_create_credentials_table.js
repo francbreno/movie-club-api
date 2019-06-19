@@ -7,7 +7,7 @@ exports.up = function(knex, Promise) {
     table.string('passwordHash').notNullable();
     table.boolean('active');
 
-    table.foreign('userId').references('userId').inTable('users');
+    table.foreign('userId').references('id').inTable('users');
   });
 };
 
