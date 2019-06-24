@@ -1,4 +1,4 @@
-const got = require('got');
+const httpClient = require('../../adapters/communication/httpClient');
 
 const API_ENDPOINT = process.env.TMDB_API_ENDPOINT;
 const API_IMAGES_ENDPOINT = process.env.TMDB_IMAGES_ENDPOINT;
@@ -9,6 +9,20 @@ const normalizeMovieDetailsURL = id => `${API_ENDPOINT}/movie/${id}?api_key=${AP
 const normalizeHeaderImageURL = path => `${API_IMAGES_ENDPOINT}/${path}`;
 
 // TODO escape title
-exports.searchMovie = title => got(normalizeSearchURL(title)).then(res => JSON.parse(res.body));
-exports.movieDetails = id => got(normalizeMovieDetailsURL(id)).then(res => JSON.parse(res.body));
-exports.headerImage = path => got(normalizeHeaderImageURL).then(res => JSON.parse(res.body));
+const searchMovie = title => httpClient(
+  normalizeSearchURL(title),
+).then(res => JSON.parse(res.body));
+
+const movieDetails = id => httpClient(
+  normalizeMovieDetailsURL(id),
+).then(res => JSON.parse(res.body));
+
+const headerImage = path => httpClient(
+  normalizeHeaderImageURL,
+).then(res => JSON.parse(res.body));
+
+module.exports = {
+  searchMovie,
+  movieDetails,
+  headerImage,
+};

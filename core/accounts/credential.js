@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const bcrypt = require('bcryptjs');
+const PasswordEncoder = require('../../adapters/security/passwordEncoder');
 
 const schema = Joi.object().keys({
   username: Joi.string().email().required(),
@@ -7,9 +7,8 @@ const schema = Joi.object().keys({
     .error(() => 'Password must contain at least one number, one lowercase and one uppercase letter and at least six characters that are letters, numbers or the underscore'),
 });
 
-const hashPassword = password => bcrypt.hashSync(password, bcrypt.genSaltSync(12));
-
-const checkPassword = (password, hash) => bcrypt.compareSync(password, hash);
+const hashPassword = password => PasswordEncoder.encode(password);
+const checkPassword = (password, hash) => PasswordEncoder.validate(password, hash);
 
 const validate = credential => schema.validate(credential, { abortEarly: false });
 

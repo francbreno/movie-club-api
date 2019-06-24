@@ -8,7 +8,7 @@ module.exports = (baseRepo) => {
   }
 
   return {
-    ...baseRepo,
+    ...baseRepo(Round),
     findRoundWhereDeadlineIsNotDefined,
   };
 };

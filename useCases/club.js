@@ -1,6 +1,7 @@
 const R = require('ramda');
+const Round = require('../core/club/round');
 
-module.exports = ({ RoundRepo }) => {
+module.exports = ({ RoundRepo, MemberRepo, ClubRepo }) => {
   async function findAllRounds() {
     return RoundRepo.findAll();
   }
@@ -9,7 +10,7 @@ module.exports = ({ RoundRepo }) => {
     const rounds = await RoundRepo.findRoundWhereDeadlineIsNotDefined();
 
     if (!rounds) { // TODO - if not array of is empty then error
-      throw new Error(`There's no round open`);
+      throw new Error("There's no round open");
     }
     return rounds;
   }
@@ -24,26 +25,43 @@ module.exports = ({ RoundRepo }) => {
     return round;
   }
 
-  async function indicateRoundWatched(userId, roundId) {
+  async function indicateMovieToCurrentRound(memberId, movie) {
+    // there must be an open round
+    // the member must own the round
+    // the movie must not have been indicated before
+    // the movie data must be saved
+  }
+
+  async function watchRound(roundId, memberId) {
     const round = await RoundRepo.findById(roundId);
 
     if (!round) {
-
+      throw Error('Round not found!');
     }
 
-    if (round.deadline) {
+    const member = await MemberRepo.findById(memberId);
 
+    if (!member) {
+      throw Error('member not found!');
     }
 
-    
+    if (!ClubRepo.isMember(round.clubId, memberId)) {
+      throw Error("Member is not part of the round's club!");
+    }
 
-    return RoundRepo.update();
+    // TODO - Check deadline
+
+    return R.pipe(
+      R.curry(Round.watch)(round),
+      RoundRepo.update,
+    )(member);
   }
 
   return {
     findAllRounds,
     findCurrentRound,
     getRoundDetails,
-    indicateRoundWatched,
+    indicateMovieToCurrentRound,
+    watchRound,
   };
 };

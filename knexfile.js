@@ -15,7 +15,7 @@ module.exports = {
       tableName: 'knex_migrations',
     },
     seeds: {
-      directory: './migrations/seeds/dev',
+      directory: './support/migrations/seeds/dev',
     },
     debug: true,
   },
@@ -37,7 +37,7 @@ module.exports = {
       tableName: 'knex_migrations',
     },
     seeds: {
-      directory: './migrations/seeds/test',
+      directory: './support/migrations/seeds/test',
     },
     debug: false,
   },

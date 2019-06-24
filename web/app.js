@@ -14,7 +14,7 @@ app.use(helmet());
 app.use(express.json());
 
 if (process.env.NODE_ENV === 'development') {
-  app.use(knexLogger(require('../infrastructure/config/db')));
+  app.use(knexLogger(require('../config/db')));
 }
 
 app.use(middlewares.injectContexts(contexts));

@@ -1,5 +1,5 @@
 const R = require('ramda');
-const Token = require('./token');
+const Token = require('../../adapters/security/token');
 
 const accounts = (credentialRepo, userRepo) => {
   const pickAuthPayload = R.pick(['id']);
@@ -19,7 +19,7 @@ const accounts = (credentialRepo, userRepo) => {
   );
 
   const findUserByToken = R.pipe(
-    Token.verifyToken,
+    Token.verify,
     extractUserId,
     getUserById,
   );
@@ -28,7 +28,7 @@ const accounts = (credentialRepo, userRepo) => {
     findUserByEmail,
     R.then(checkUserPassword(password)),
     R.then(pickAuthPayload),
-    R.then(Token.generateToken),
+    R.then(Token.generate),
   )(email);
 
   return {
