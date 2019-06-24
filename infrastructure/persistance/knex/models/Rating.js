@@ -1,4 +1,4 @@
-const BaseModel = require('./baseModel');BaseModel
+const BaseModel = require('./baseModel');
 
 class Rating extends BaseModel {
   static get tableName() {

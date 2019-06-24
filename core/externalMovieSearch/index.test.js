@@ -1,4 +1,4 @@
-const tmdb = require('./tmdb');
+const tmdb = require('./index');
 
 describe('TMDB API', () => {
   describe('Search movie', () => {

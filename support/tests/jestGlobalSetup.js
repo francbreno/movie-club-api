@@ -1,6 +1,6 @@
 // import knexMigrate from 'knex-migrate';
 
-const db = require('../../config/db');
+const db = require('../../infrastructure/config/db');
 
 module.exports = async () => {
   // const log = ({ action, migration }) => console.log(`Doing ${action} on ${migration}`);

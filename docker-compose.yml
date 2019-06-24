@@ -1,19 +1,41 @@
-version: "3"
+version: "2.4"
 
 services:
-  db_dev:
+  api:
+    build:
+      context: .
+    command: nodemon --inspect=0.0.0.0:9229 index.js
+    environment:
+      NODE_ENV: development
+
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+      - "9229:9229" # for debugging
+    volumes:
+      - .:/app
+    networks:
+      - backend
+
+  db:
     image: postgres
     environment:
       POSTGRES_USER: homemPeludoChorando
-      POSTGRES_PASSWORD: "n@oTem0sVagAs"
+      POSTGRES_PASSWORD: n@oTem0sVagAs
       POSTGRES_DB: movie_club_dev
     ports:
       - "5445:5432"
-  db_test:
-    image: postgres
-    environment:
-      POSTGRES_USER: tester
-      POSTGRES_PASSWORD: "testing"
-      POSTGRES_DB: movie_club_test
-    ports:
-      - "5446:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - backend
+    healthcheck:
+      test: pg_isready -U postgres -h 127.0.0.1
+
+networks:
+  backend:
+
+volumes:
+  db-data:

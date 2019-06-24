@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const tmdbAPI = require('../../apis/tmdb');
+const tmdbAPI = require('../externalMovieSearch/tmdb');
 
 let instance = null;
 

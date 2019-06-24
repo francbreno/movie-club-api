@@ -1,12 +1,7 @@
 const R = require('ramda');
 const Token = require('./token');
-const userCreator = require('./user');
-const credentialCreator = require('./credential');
 
-module.exports = (repo) => {
-  const Credential = credentialCreator(repo);
-  const User = userCreator(repo);
-
+const accounts = (credentialRepo, userRepo) => {
   const pickAuthPayload = R.pick(['id']);
   const extractUserId = R.prop('id');
   const checkUserPassword = R.curry(Credential.check);
@@ -17,14 +12,14 @@ module.exports = (repo) => {
   const register = R.pipe(
     User.sanitize,
     User.validateForRegistration,
-    User.register,
-    R.then(Credential.create),
+    userRepo.save,
+    R.then(credentialRepo.save),
     R.then(pickAuthPayload),
     R.then(Token.generateToken),
   );
 
   const findUserByToken = R.pipe(
-    Token.VerifyToken,
+    Token.verifyToken,
     extractUserId,
     getUserById,
   );
@@ -45,3 +40,5 @@ module.exports = (repo) => {
     getUserById,
   };
 };
+
+module.exports = R.curry(accounts);
