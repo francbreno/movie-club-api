@@ -1,7 +1,7 @@
-const injectContexts = require('./injectContexts');
+const injectUseCases = require('./injectUseCases');
 const passport = require('./passport');
 
 module.exports = {
-  injectContexts,
+  injectUseCases,
   passport,
 };

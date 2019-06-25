@@ -5,7 +5,7 @@ const knexLogger = require('knex-logger');
 const routes = require('./routes');
 const errorHandlers = require('./handlers/errorHandlers');
 const middlewares = require('./middlewares');
-const contexts = require('../core');
+const useCases = require('../config/adaptersWiredUseCases');
 
 const app = express();
 
@@ -17,8 +17,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(knexLogger(require('../config/db')));
 }
 
-app.use(middlewares.injectContexts(contexts));
-app.use(middlewares.passport.initialize(contexts));
+app.use(middlewares.injectUseCases(useCases));
+app.use(middlewares.passport.initialize(useCases));
 
 app.use('/', routes);
 

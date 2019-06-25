@@ -1,5 +1,6 @@
-function start(member, movie = null, deadline) {
+function create(club, member, movie = null, deadline) {
   return {
+    club,
     member,
     movie,
     deadline,
@@ -31,7 +32,7 @@ function watch(round, member) {
 }
 
 module.exports = {
-  start,
+  create,
   finish,
   setMovie,
   watch,

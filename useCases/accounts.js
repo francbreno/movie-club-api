@@ -3,7 +3,7 @@ const Credential = require('../core/accounts/credential');
 const User = require('../core/accounts/user');
 const Token = require('../adapters/security/token');
 
-module.exports = ({ RoundRepo }) => {
+module.exports = ({ RoundRepo, UseRepo }) => {
   const pickAuthPayload = R.pick(['userId']);
 
   function checkPassword(password, credential) {
@@ -41,5 +41,6 @@ module.exports = ({ RoundRepo }) => {
   return {
     loginWithUsernameAndPassword,
     registerNewUser,
+    getUserById: UseRepo.findById,
   };
 };

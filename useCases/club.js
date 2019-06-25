@@ -2,11 +2,11 @@ const R = require('ramda');
 const Round = require('../core/club/round');
 
 module.exports = ({ RoundRepo, MemberRepo, ClubRepo }) => {
-  async function findAllRounds() {
+  async function getAllRoundsUntilNow() {
     return RoundRepo.findAll();
   }
 
-  async function findCurrentRound() {
+  async function getCurrentRoundDetails() {
     const rounds = await RoundRepo.findRoundWhereDeadlineIsNotDefined();
 
     if (!rounds) { // TODO - if not array of is empty then error
@@ -58,8 +58,8 @@ module.exports = ({ RoundRepo, MemberRepo, ClubRepo }) => {
   }
 
   return {
-    findAllRounds,
-    findCurrentRound,
+    getAllRoundsUntilNow,
+    getCurrentRoundDetails,
     getRoundDetails,
     indicateMovieToCurrentRound,
     watchRound,

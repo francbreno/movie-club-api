@@ -8,20 +8,20 @@ const handlePayloadUser = done => (user) => {
   return done(null, false);
 };
 
-const createStrategy = (contexts, options) => new Strategy(
+const createStrategy = (useCases, options) => new Strategy(
   options,
-  (payload, done) => contexts.accounts.getUserById(payload.id)
+  (payload, done) => useCases.accounts.getUserById(payload.id)
     .then(handlePayloadUser(done)).catch(err => done(err, null)),
 );
 
 module.exports = {
-  initialize(contexts) {
+  initialize(useCases) {
     const strategyOptions = {
       secretOrKey: process.env.SECRET_KEY,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     };
 
-    passport.use(createStrategy(contexts, strategyOptions));
+    passport.use(createStrategy(useCases, strategyOptions));
 
     return passport.initialize();
   },
