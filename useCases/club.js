@@ -1,5 +1,6 @@
 const R = require('ramda');
 const Round = require('../core/club/round');
+const Club = require('../core/club/club');
 
 module.exports = ({ RoundRepo, MemberRepo, ClubRepo }) => {
   async function getAllRoundsUntilNow() {
@@ -35,13 +36,13 @@ module.exports = ({ RoundRepo, MemberRepo, ClubRepo }) => {
   async function watchRound(roundId, memberId) {
     const round = await RoundRepo.findById(roundId);
 
-    if (!round) {
+    if (!roundId) {
       throw Error('Round not found!');
     }
 
     const member = await MemberRepo.findById(memberId);
 
-    if (!member) {
+    if (!memberId) {
       throw Error('member not found!');
     }
 
@@ -57,7 +58,29 @@ module.exports = ({ RoundRepo, MemberRepo, ClubRepo }) => {
     )(member);
   }
 
+  async function startANewRound(clubId) {
+    // The round is open by a system process
+    // The round is part of a club
+    const club = ClubRepo.findById(clubId);
+    // there can be only one open round
+    // must define to which member the round belongs, so this member can define the round's movie
+    const position = Club.nextRoundPosition();
+    const member = MemberRepo.findMemberByPosition(clubId, position);
+    const [updatedClub, round] = Club.startANewRound(club, member);
+
+    ClubRepo
+      .query()
+      .upsertGraph(updatedClub, {
+        noInsert: ['owner', 'members'],
+        noUpdate: ['owner', 'members', 'rounds'],
+        noDelete: ['owner', 'members', 'rounds'],
+      });
+
+    return round;
+  }
+
   return {
+    startANewRound,
     getAllRoundsUntilNow,
     getCurrentRoundDetails,
     getRoundDetails,

@@ -1,4 +1,4 @@
-const Credential = require('./models/Credential');
+const Credential = require('./Credential');
 
 module.exports = (baseRepo) => {
   async function getCredentialByEmail(email) {

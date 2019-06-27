@@ -4,7 +4,7 @@ function newBasicClub() {
   return {
     founder: { id: 1 },
     title: 'Test Club',
-    members: [],
+    members: [{ userId: 1 }],
     rounds: [],
   };
 }
@@ -92,6 +92,18 @@ describe('core/club/club', () => {
         expect(updatedClub.members).not.toContainEqual({ userId: aUser.id });
       });
     });
+
+    describe('Removing an unexisting member', () => {
+      const aUser = {
+        id: 20,
+      };
+
+      test('Must throw an exception', () => {
+        expect(() => {
+          Club.removeMember(club, aUser);
+        }).toThrow();
+      });
+    });
   });
 
   describe('addRound', () => {
@@ -107,6 +119,30 @@ describe('core/club/club', () => {
 
       test("the round must be added in the club's rounds list", () => {
         expect(updatedClub.rounds).toContainEqual(aRound);
+      });
+    });
+  });
+
+  describe('startANewRound', () => {
+    describe('Starting a new round', () => {
+      let updatedClub;
+      beforeEach(() => {
+        updatedClub = Club.startANewRound(club, { userId: 1 });
+      });
+
+      test("the round must be added in the club's rounds list", () => {
+        expect(updatedClub.rounds).toHaveLength(1);
+      });
+      test('the round created must have no movie set', () => {
+        expect(updatedClub.rounds[0].movie).toBeNull();
+      });
+    });
+
+    describe("Starting a new round with a user that's not a member of the club", () => {
+      test('Must throw an exception', () => {
+        expect(() => {
+          Club.startANewRound(club, { userId: 999 });
+        }).toThrow();
       });
     });
   });

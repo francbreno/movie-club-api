@@ -42,12 +42,17 @@ function addRound(club, round) {
 }
 
 function startANewRound(club, member) {
-  if (!isAClubMember(club, { id: member.userId })) {
+  if (isNotAClubMember(club, { id: member.userId })) {
     throw Error("It's not a club member");
   }
 
   const round = Round.create(club, member, null, Date.now());
-  return addRound(club, round);
+  const updatedClub = addRound(club, round);
+  return [updatedClub, round];
+}
+
+function nextRoundOwner(club, clubRepo) {
+  const owner = clubRepo.findNextRoundOwner(club.id, currentRoundPosition);
 }
 
 module.exports = {

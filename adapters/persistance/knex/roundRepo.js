@@ -1,14 +1,14 @@
-const Round = require('./models/Round');
+const Round = require('./Round');
 
 module.exports = (baseRepo) => {
-  async function findRoundWhereDeadlineIsNotDefined() {
+  async function findCurrentRound() {
     return Round
       .query()
-      .where('deadline', null);
+      .where('active', true);
   }
 
   return {
     ...baseRepo(Round),
-    findRoundWhereDeadlineIsNotDefined,
+    findCurrentRound,
   };
 };

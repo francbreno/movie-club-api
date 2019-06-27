@@ -6,4 +6,5 @@ module.exports = Model => ({
   save: async data => Model.insert(data),
   update: async updatedData => Model.query().patch(updatedData),
   delete: async id => Model.query().deleteById(id),
+  query: () => Model.query(),
 });

@@ -1,27 +1,40 @@
-function create(club, member, movie = null, deadline) {
+function create(club, member, deadline) {
   return {
     club,
     member,
-    movie,
     deadline,
+    active: false,
+    watchedBy: [],
   };
 }
 
-function setMovie(round, movie) {
+function setMovie(round, member, movie) {
+  if (!round.active) {
+    throw Error('The movie cannot be set because the round is not active');
+  }
+
+  if (round.member.userId !== member.userId) {
+    throw Error('Only the owner of the round can set a movie');
+  }
+
   return {
     ...round,
     movie,
   };
 }
 
-function finish(round, date) {
+function finish(round) {
   return {
     ...round,
-    deadline: date,
+    active: false,
   };
 }
 
 function watch(round, member) {
+  if (!round.active) {
+    throw Error('An inactive round cannot be set as watched');
+  }
+
   return {
     ...round,
     watchedBy: [

@@ -10,6 +10,6 @@ if (process.env.WITH_PROXY) {
   });
 }
 
-const app = require('./web/app');
+const app = require('./adapters/web/app');
 
 app.listen(3000, () => console.log('server is running!'));
