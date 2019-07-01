@@ -5,7 +5,7 @@ exports.seed = function(knex, Promise) {
     .then(function () {
       // Inserts seed entries
       return knex('movies').insert([
-        {roundId: 1, title: 'The Matrix', year: 1999},
+        {id: 1, title: 'The Matrix', year: 1999, clubId: 1},
       ]);
     });
 };

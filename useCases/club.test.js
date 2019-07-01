@@ -1,7 +1,7 @@
 const Club = require('./club');
 
 const MockRoundRepo = {
-  findRoundWhereDeadlineIsNotDefined: jest.fn(),
+  findCurrentRound: jest.fn(),
 };
 
 let ClubUseCases;
@@ -15,9 +15,10 @@ describe('Use Cases - Club', () => {
     describe('when there is an open round', async () => {
       let round;
 
-      MockRoundRepo.findRoundWhereDeadlineIsNotDefined.mockReturnValue({
+      MockRoundRepo.findCurrentRound.mockReturnValue({
         id: 1,
         memberId: 2,
+        active: true,
         deadline: Date.now(),
       });
 

@@ -1,7 +1,7 @@
 
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('users', table => {
-    table.integer('userId').primary();
+    table.integer('id').primary();
     table.string('firstName');
     table.string('lastName');
     table.date('birthDate');

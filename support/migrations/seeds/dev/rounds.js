@@ -5,7 +5,7 @@ exports.seed = function(knex, Promise) {
     .then(function () {
       // Inserts seed entries
       return knex('rounds').insert([
-        {id: 1, memberId: 1, deadline: new Date()},
+        {id: 1, memberId: 1, deadline: new Date(), clubId: 1},
       ]);
     });
 };

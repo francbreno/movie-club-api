@@ -11,7 +11,7 @@ class Member extends BaseModel {
         relation: BaseModel.HasManyRelation,
         modelClass: 'Round',
         join: {
-          from: 'members.userId',
+          from: 'members.id',
           to: 'rounds.memberId',
         },
       },

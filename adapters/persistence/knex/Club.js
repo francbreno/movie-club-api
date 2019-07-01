@@ -16,11 +16,11 @@ class Club extends BaseModel {
         },
       },
       rounds: {
-        relation: BaseModel.HaManyRelation,
+        relation: BaseModel.HasManyRelation,
         modelClass: 'Round',
         join: {
-          from: 'club.id',
-          to: 'round.clubId',
+          from: 'clubs.id',
+          to: 'rounds.clubId',
         },
       },
     };
