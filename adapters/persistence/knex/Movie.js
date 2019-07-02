@@ -11,7 +11,7 @@ class Movie extends BaseModel {
         relation: BaseModel.HasManyRelation,
         modelClass: 'Movie',
         join: {
-          from: 'movies.roundId',
+          from: 'movies.id',
           to: 'ratings.movieId',
         },
       },
@@ -19,7 +19,7 @@ class Movie extends BaseModel {
         relation: BaseModel.BelongsToOneRelation,
         modelClass: 'Round',
         join: {
-          from: 'movies.roundId',
+          from: 'movies.id',
           to: 'rounds.id',
         }
       }

@@ -12,7 +12,7 @@ class Round extends BaseModel {
         modelClass: 'Movie',
         join: {
           from: 'rounds.id',
-          to: 'movies.roundId',
+          to: 'movies.id',
         },
       },
       indicatedBy: {
@@ -20,7 +20,7 @@ class Round extends BaseModel {
         modelClass: 'Member',
         join: {
           from: 'rounds.memberId',
-          to: 'members.userId',
+          to: 'members.id',
         },
       },
       watchedBy: {
@@ -32,7 +32,7 @@ class Round extends BaseModel {
             from: 'rounds_members.roundId',
             to: 'rounds_members.memberId',
           },
-          to: 'members.userId',
+          to: 'members.id',
         },
       },
     };
