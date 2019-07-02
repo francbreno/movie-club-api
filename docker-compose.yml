@@ -7,7 +7,6 @@ services:
     command: nodemon --inspect=0.0.0.0:9229 index.js
     environment:
       NODE_ENV: development
-
     depends_on:
       db:
         condition: service_healthy
